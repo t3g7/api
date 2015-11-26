@@ -10,6 +10,11 @@
     "type": "git",
     "url": "git+https://github.com/t3g7/api.git"
   },
+  "dependencies": {
+      "body-parser": "*",
+      "cassandra-driver": "*",
+      "express": "*"
+  },
   "author": "Benjamin Fovet",
   "license": "Apache-2.0",
   "bugs": {
