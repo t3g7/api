@@ -6,9 +6,6 @@ var app = express();
 app.use(bodyParser.json());
 
 var client = new cassandra.Client({ contactPoints : ['127.0.0.1']});
-client.connect(function(err, res) {
-	console.log('Connected to Cassandra');
-});
 
 /*
  * GET tweets
