@@ -1,24 +1,28 @@
 {
   "name": "api",
   "version": "0.0.1",
-  "description": "App connecting Cassandra to a data visualization UI",
+  "description": "API feeding a data visualization UI",
   "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "start": "node server.js",
+    "test": "swagger project test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/t3g7/api.git"
   },
   "dependencies": {
+      "express": "^4.12.3",
+      "swagger-express-mw": "^0.1.0",
       "body-parser": "*",
-      "cassandra-driver": "*",
-      "express": "*",
-      "supertest": "*",
-      "mocha": "*"
+      "cassandra-driver": "*"
   },
-  "author": "Benjamin Fovet",
-  "license": "Apache-2.0",
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "author": "",
+  "license": "",
   "bugs": {
     "url": "https://github.com/t3g7/api/issues"
   },
