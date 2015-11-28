@@ -1,4 +1,4 @@
-var server = require('../server.js');
+var server = require('../server');
 var supertest = require('supertest');
 
 var api = supertest.agent('http://localhost:8080');
