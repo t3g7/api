@@ -1,16 +1,30 @@
-var express = require('express');
+'use strict';
+
+var SwaggerExpress = require('swagger-express-mw');
+var SwaggerUi = require('swagger-tools/middleware/swagger-ui');
 var bodyParser = require('body-parser');
 var cassandra = require('cassandra-driver');
+var app = require('express')();
 
-var app = express();
+module.exports = app; // for testing
 app.use(bodyParser.json());
+
+var config = {
+  appRoot: __dirname // required config
+};
 
 var client = new cassandra.Client({ contactPoints : ['127.0.0.1']});
 
-/*
- * GET tweets
- */
-app.get('/tweets', function(req, res) {
+SwaggerExpress.create(config, function(err, swaggerExpress) {
+  if (err) { throw err; }
+
+  // add swagger-ui
+  app.use(SwaggerUi(swaggerExpress.runner.swagger));
+
+  // install middleware
+  swaggerExpress.register(app);
+
+  app.get('/tweets', function(req, res) {
 	var getTweets = 'SELECT * FROM twitter_streaming.tweets;';
 	client.execute(getTweets, function(err, result) {
 		if (err) {
@@ -25,4 +39,6 @@ app.get('/tweets', function(req, res) {
 	});
 });
 
-app.listen(8080);
+  var port = process.env.PORT || 8080;
+  app.listen(port);
+});
