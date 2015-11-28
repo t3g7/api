@@ -1,13 +1,19 @@
 # API
 
-### Install dependencies
+## Requirements
 
-Run `npm install`
+- Cassandra
 
-### Run the API server
+## Installation
 
-Run the server with `node server.js`
+Dependencies: run `npm install`
 
-### Tests
+Run the API with `swagger project start api` or `node server.js`
+
+## Use the API
+
+The API documentation is available at `http://localhost:8080/docs`
+
+## Tests
 
 Run `npm test`
