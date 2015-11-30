@@ -30,6 +30,10 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     next();
   });
 
+  app.get('/', function(req, res) {
+    res.send({msg: 'Spark Streaming app API. Please go to /docs for documentation'})
+  });
+
   app.get('/tweets', function(req, res) {
     var getTweets = 'SELECT * FROM twitter_streaming.tweets;';
     client.execute(getTweets, function(err, result) {
