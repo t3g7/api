@@ -31,19 +31,34 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   });
 
   app.get('/tweets', function(req, res) {
-	var getTweets = 'SELECT * FROM twitter_streaming.tweets;';
-	client.execute(getTweets, function(err, result) {
-		if (err) {
-			res.status(404).send({msg: 'Tweets not found'});
-		} else {
-			if (result.rows.length > 0) {
-				res.send(result.rows);
-			} else {
-				console.log("No results");
-			}
-		}
-	});
-});
+    var getTweets = 'SELECT * FROM twitter_streaming.tweets;';
+    client.execute(getTweets, function(err, result) {
+      if (err) {
+        res.status(404).send({msg: '404 not found'});
+      } else {
+        if (result.rows.length > 0) {
+          res.send(result.rows);
+        } else {
+          console.log("No results");
+        }
+      }
+    });
+  });
+
+  app.get('/freq', function(req, res) {
+    var getTweets = 'SELECT * FROM twitter_streaming.freq;';
+    client.execute(getTweets, function(err, result) {
+      if (err) {
+        res.status(404).send({msg: '404 not found'});
+      } else {
+        if (result.rows.length > 0) {
+          res.send(result.rows);
+        } else {
+          console.log("No results");
+        }
+      }
+    });
+  });
 
   var port = process.env.PORT || 8080;
   app.listen(port);
