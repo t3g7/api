@@ -1,5 +1,4 @@
 var supertest = require('supertest');
-var cassandra = require('cassandra-driver');
 
 var api = supertest.agent('http://'+ process.env.DOCKER_HOST_IP +':8080');
 
