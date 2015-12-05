@@ -6,4 +6,4 @@ ADD . .
 
 EXPOSE 7199 7000 7001 9160 9042
 
-CMD ["node", "server.js"]
+ENTRYPOINT ["node", "server.js", "-c"]
