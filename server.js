@@ -15,12 +15,13 @@ var config = {
 };
 
 var ops = stdio.getopt({
-    'cassandraip': {key: 'c', args: 1, mandatory: true, description: 'Cassandra contact point IP'}
+    'cassandraip': {key: 'c', args: 1, description: 'Cassandra contact point IP'}
 });
-var cassandraContacPoint = ops.cassandraip;
+var cassandraContacPoint = ops.cassandraip || process.env.CASSANDRA_IP;
 
-if (!cassandraContacPoint) {
+if (!ops.cassandraip && !process.env.CASSANDRA_IP) {
   ops.printHelp();
+  process.exit();
 }
 
 var client = new cassandra.Client({ contactPoints : [cassandraContacPoint]});
