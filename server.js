@@ -60,21 +60,18 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     }
   });
 
-  app.get('/tweets/user', function(req, res) {
-    var userId = req.query.id;
-    var screenName = req.query.name;
+  app.get('/tweets/user/id/:id', function(req, res) {
+    var userId = req.params.id;
 
-    if (screenName !== undefined) {
-      var getTweetsByUserScreenName = "SELECT * FROM twitter_streaming.tweets WHERE user_screen_name='" + screenName + "';";
-      executeQuery(getTweetsByUserScreenName, res);
+    var getTweetsByUserId = 'SELECT * FROM twitter_streaming.tweets WHERE user_id=' + userId + 'ALLOW FILTERING;';
+    executeQuery(getTweetsByUserId, res);
+  });
 
-    } else if (userId !== undefined) {
-      var getTweetsByUserId = 'SELECT * FROM twitter_streaming.tweets WHERE user_id=' + userId + 'ALLOW FILTERING;';
-      executeQuery(getTweetsByUserId, res);
+  app.get('/tweets/user/name/:name', function(req, res) {
+    var userName = req.params.name;
 
-    } else if (userId !== undefined && screenName !== undefined) {
-      res.status(403).send({msg: '403 forbidden: cannot query both name and id'});
-    }
+    var getTweetsByUserScreenName = "SELECT * FROM twitter_streaming.tweets WHERE user_screen_name='" + userName + "';";
+    executeQuery(getTweetsByUserScreenName, res);
   });
 
   app.get('/tweet/:id', function(req, res) {
