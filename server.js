@@ -15,6 +15,20 @@ var config = {
 
 var client = new cassandra.Client({ contactPoints : ['127.0.0.1']});
 
+function executeQuery(request, res) {
+  client.execute(request, function(err, result) {
+    if (err) {
+      res.status(404).send({msg: '404 not found'});
+    } else {
+      if (result.rows.length > 0) {
+        res.send(result.rows);
+      } else {
+        console.log("No results");
+      }
+    }
+  });
+}
+
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
 
@@ -35,33 +49,42 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   });
 
   app.get('/tweets', function(req, res) {
-    var getTweets = 'SELECT * FROM twitter_streaming.tweets;';
-    client.execute(getTweets, function(err, result) {
-      if (err) {
-        res.status(404).send({msg: '404 not found'});
-      } else {
-        if (result.rows.length > 0) {
-          res.send(result.rows);
-        } else {
-          console.log("No results");
-        }
-      }
-    });
+    var sentiment = req.query.sentiment;
+
+    if (sentiment !== undefined) {
+      var getTweetsBySentiment = "SELECT * FROM twitter_streaming.tweets WHERE sentiment='" + sentiment + "';";
+      executeQuery(getTweetsBySentiment, res);
+    } else {
+      var getAllTweets = 'SELECT * FROM twitter_streaming.tweets;';
+      executeQuery(getAllTweets, res);
+    }
+  });
+
+  app.get('/tweets/user', function(req, res) {
+    var userId = req.query.id;
+    var screenName = req.query.name;
+
+    if (screenName !== undefined) {
+      var getTweetsByUserScreenName = "SELECT * FROM twitter_streaming.tweets WHERE user_screen_name='" + screenName + "';";
+      executeQuery(getTweetsByUserScreenName, res);
+
+    } else if (userId !== undefined) {
+      var getTweetsByUserId = 'SELECT * FROM twitter_streaming.tweets WHERE user_id=' + userId + 'ALLOW FILTERING;';
+      executeQuery(getTweetsByUserId, res);
+
+    } else if (userId !== undefined && screenName !== undefined) {
+      res.status(403).send({msg: '403 forbidden: cannot query both name and id'});
+    }
+  });
+
+  app.get('/tweet/:id', function(req, res) {
+    var getTweetById = 'SELECT * FROM twitter_streaming.tweets WHERE tweet_id=' + req.params.id + ';';
+    executeQuery(getTweetById, res);
   });
 
   app.get('/freq', function(req, res) {
-    var getTweets = 'SELECT * FROM twitter_streaming.freq;';
-    client.execute(getTweets, function(err, result) {
-      if (err) {
-        res.status(404).send({msg: '404 not found'});
-      } else {
-        if (result.rows.length > 0) {
-          res.send(result.rows);
-        } else {
-          console.log("No results");
-        }
-      }
-    });
+    var getFreq = 'SELECT * FROM twitter_streaming.freq;';
+    executeQuery(getFreq, res);
   });
 
   var port = process.env.PORT || 8080;
