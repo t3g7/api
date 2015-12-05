@@ -4,6 +4,7 @@ var SwaggerExpress = require('swagger-express-mw');
 var SwaggerUi = require('swagger-tools/middleware/swagger-ui');
 var bodyParser = require('body-parser');
 var cassandra = require('cassandra-driver');
+var stdio = require('stdio');
 var app = require('express')();
 
 module.exports = app; // for testing
@@ -13,7 +14,16 @@ var config = {
   appRoot: __dirname // required config
 };
 
-var client = new cassandra.Client({ contactPoints : ['127.0.0.1']});
+var ops = stdio.getopt({
+    'cassandraip': {key: 'c', args: 1, mandatory: true, description: 'Cassandra contact point IP'}
+});
+var cassandraContacPoint = ops.cassandraip;
+
+if (!cassandraContacPoint) {
+  ops.printHelp();
+}
+
+var client = new cassandra.Client({ contactPoints : [cassandraContacPoint]});
 var routes = require('./routes')(app, client);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {

@@ -4,7 +4,7 @@
   "description": "API feeding a data visualization UI",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node server.js -c",
     "test": "swagger project test"
   },
   "repository": {
@@ -15,7 +15,8 @@
       "express": "^4.12.3",
       "swagger-express-mw": "^0.1.0",
       "body-parser": "*",
-      "cassandra-driver": "*"
+      "cassandra-driver": "*",
+      "stdio": "*"
   },
   "devDependencies": {
     "should": "^7.1.0",
