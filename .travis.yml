@@ -12,6 +12,7 @@ env:
   - CASSANDRA_IP=127.0.0.1
 
 before_install:
+  - npm install
   - npm install -g swagger
   - cqlsh -f test/init.cql
   - node server.js -c $CASSANDRA_IP
