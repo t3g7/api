@@ -14,6 +14,7 @@ env:
 before_install:
   - npm install -g swagger
   - cqlsh -f test/init.cql
+  - node server.js -c $CASSANDRA_IP
 
 script:
   - npm test
