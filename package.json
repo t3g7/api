@@ -12,12 +12,13 @@
     "url": "git+https://github.com/t3g7/api.git"
   },
   "dependencies": {
-      "express": "^4.12.3",
-      "swagger-express-mw": "^0.1.0",
-      "swagger-ui": "*",
-      "body-parser": "*",
-      "cassandra-driver": "*",
-      "stdio": "*"
+    "express": "*",
+    "swagger-express-mw": "*",
+    "swagger-tools": "*",
+    "swagger-ui": "*",
+    "body-parser": "*",
+    "cassandra-driver": "*",
+    "stdio": "*"
   },
   "devDependencies": {
     "should": "^7.1.0",
