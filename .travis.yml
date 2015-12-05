@@ -12,7 +12,7 @@ env:
   - CASSANDRA_IP=127.0.0.1
 
 before_install:
-  - usr/local/cassandra/bin/cqlsh -f test/init.cql
+  - cqlsh -f test/init.cql
 
 script:
   - npm test
