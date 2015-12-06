@@ -25,7 +25,7 @@ if (!ops.cassandraip && !process.env.CASSANDRA_IP) {
 }
 
 var client = new cassandra.Client({ contactPoints : [cassandraContacPoint]});
-var routes = require('./routes')(app, client);
+require('./routes')(app, client);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
