@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: API Spark-Streaming App
+  title: Spark-Streaming App API
 # during dev, should point to your local machine
 host: localhost:8080
 # basePath prefixes all resource paths
@@ -21,36 +21,164 @@ paths:
   /tweets:
     # x-swagger-router-controller:
     get:
-      description: Returns tweets
-      # used as the method name of the controller
-      operationId: tweets
+      summary: Find all tweets
+      description: Returns all tweets stored in Cassandra
       parameters:
-        - name: tweets
+        - name: sentiment
           in: query
-          description: Return all tweets
-          required: false
+          description: Sentiment of tweet
           type: string
+          allowEmptyValue: false
+          enum: ["VERY_NEGATIVE", "NEGATIVE", "NEUTRAL", "POSITIVE", "VERY_POSITIVE", "NOT_UNDERSTOOD"]
       responses:
         "200":
-          description: Success
+          description: An array of tweets
           schema:
+            type: array
             # a pointer to a definition
-            $ref: "#/definitions/TweetsResponse"
+            $ref: "#/definitions/Tweets"
         # responses may fall through to errors
         default:
           description: Error
           schema:
+            type: array
+            $ref: "#/definitions/ErrorResponse"
+  /tweets/user/id/{id}:
+    get:
+      summary: Find tweets by user ID
+      description: Find tweets by user ID and returns all tweets created by this user.
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          type: number
+          required: true
+      responses:
+        "200":
+          description: An array of tweets
+          schema:
+            type: array
+            # a pointer to a definition
+            $ref: "#/definitions/Tweets"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            type: array
+            $ref: "#/definitions/ErrorResponse"
+  /tweets/user/name/{name}:
+    get:
+      summary: Find tweets by user name
+      description: Find tweets by user name and returns all tweets created by this user.
+      parameters:
+        - name: name
+          in: path
+          description: User name
+          type: string
+          required: true
+      responses:
+        "200":
+          description: An array of tweets
+          schema:
+            type: array
+            # a pointer to a definition
+            $ref: "#/definitions/Tweets"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            type: array
+            $ref: "#/definitions/ErrorResponse"
+  /tweet/{id}:
+    get:
+      summary: Find a tweet by tweet ID
+      description: Find a tweet based on its tweet ID.
+      parameters:
+        - name: id
+          in: path
+          description: Tweet ID
+          type: number
+          required: true
+      responses:
+        "200":
+          description: An array of tweets
+          schema:
+            type: array
+            # a pointer to a definition
+            $ref: "#/definitions/Tweets"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            type: array
+            $ref: "#/definitions/ErrorResponse"
+  /freq:
+    get:
+      description: Returns tweet count by minute
+      summary: Find tweet count by minute
+      responses:
+        "200":
+          description: An array of tweets
+          schema:
+            type: array
+            # a pointer to a definition
+            $ref: "#/definitions/Tweets"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            type: array
             $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  TweetsResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
+  Tweets:
+    type: array
+    items:
+      properties:
+        body:
+          type: string
+          description: Text of tweet
+        user_id:
+          type: integer
+          description: User ID of user who created the tweet
+        tweet_id:
+          type: integer
+          description: Tweet ID of the tweet
+        user_screen_name:
+          type: string
+          description: User name
+        sentiment:
+          type: string
+          description: Sentiment of the tweet
+        created_at:
+          type: string
+          description: Timestamp at which the tweet was created
+        favorite_count:
+          type: integer
+          description: Number of times the tweet has been favorited
+        retweet_count:
+          type: integer
+          description: Number of times the tweet has been retweeted
+        hastags:
+          type: array
+          items:
+            type: string
+            description: Hashtags found in the tweet body
+        lang:
+          type: string
+          description: Language of the tweet
+        urls:
+          type: array
+          items:
+            type: string
+            description: URLs found in the tweet body
+        user_mentions:
+          type: array
+          items:
+            type: string
+            description: User screen names found in the tweet body
   ErrorResponse:
     required:
       - message

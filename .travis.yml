@@ -1,0 +1,24 @@
+sudo: required
+
+language: node_js
+node_js:
+  - "4.1"
+
+services:
+  - cassandra
+
+env:
+  - DOCKER_HOST_IP=localhost CASSANDRA_IP=127.0.0.1
+
+before_install:
+  - cqlsh $CASSANDRA_IP -f test/init.cql
+
+install:
+  - npm install
+  - npm install -g swagger
+
+before_script:
+  - node server.js -c $CASSANDRA_IP &
+
+script:
+  - npm test
