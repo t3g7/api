@@ -1,4 +1,4 @@
-# API [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://registry.hub.docker.com/u/t3g7/api/)
+# API [![Build Status](https://travis-ci.org/t3g7/api.svg?branch=ci)](https://travis-ci.org/t3g7/api) [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://registry.hub.docker.com/u/t3g7/api/)
 
 ## Requirements
 
