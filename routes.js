@@ -1,6 +1,6 @@
 module.exports = function(app, client) {
   function executeQuery(request, res) {
-    client.execute(request, function(err, result) {
+    /*client.execute(request, function(err, result) {
       if (err) {
         res.status(404).send({message: err});
       } else {
@@ -10,7 +10,21 @@ module.exports = function(app, client) {
           console.log('No results');
         }
       }
-    });
+    });*/
+
+    client.stream(request)
+        .on('readable', function() {
+          var row;
+          while (row = this.read()) {
+            console.log('Data received: tweet text = %s', row.body);
+          }
+        })
+        .on('end', function() {
+          console.log('Stream ended');
+        })
+        .on('error', function() {
+          console.log('Error');
+        });
   }
 
   app.get('/', function(req, res) {
