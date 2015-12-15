@@ -12,19 +12,22 @@ module.exports = function(app, client) {
       }
     });*/
 
-    client.stream(request)
-        .on('readable', function() {
-          var row;
-          while (row = this.read()) {
-            console.log('Data received: tweet text = %s', row.body);
-          }
-        })
-        .on('end', function() {
-          console.log('Stream ended');
-        })
-        .on('error', function() {
-          console.log('Error');
-        });
+    var stream = client.stream(request);
+
+    var result = [];
+    stream.on('data', function(data) {
+      result.push(data);
+      console.log(data);
+    });
+
+    stream.on('end', function() {
+      res.json(result);
+      console.log('Stream ended');
+    });
+
+    stream.on('error', function() {
+      console.log('Error');
+    });
   }
 
   app.get('/', function(req, res) {
