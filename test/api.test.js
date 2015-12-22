@@ -1,6 +1,6 @@
 var supertest = require('supertest');
 
-var api = supertest.agent('http://'+ process.env.DOCKER_HOST_IP +':8080');
+var api = supertest.agent('http://'+ process.env.API_SERVER_IP +':8080');
 
 describe('Test API', function() {
 	describe('/GET home', function() {
