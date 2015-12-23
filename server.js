@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var cassandra = require('cassandra-driver');
 var stdio = require('stdio');
 var app = require('express')();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 module.exports = app; // for testing
 app.use(bodyParser.json());
@@ -25,7 +27,7 @@ if (!ops.cassandraip && !process.env.CASSANDRA_IP) {
 }
 
 var client = new cassandra.Client({ contactPoints : [cassandraContacPoint]});
-require('./routes')(app, client);
+//require('./routes')(app, client, io);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
   if (err) { throw err; }
@@ -37,11 +39,47 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.register(app);
 
   app.use(function(req, res, next) {
+    //res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
 
+  function executeQuery(request, res) {
+    var stream = client.stream(request);
+
+    var result = [];
+    stream.on('data', function(data) {
+      result.push(data);
+    });
+
+    stream.on('end', function() {
+      res.json(result);
+      io.emit('tweets', result);
+      console.log('Stream ended');
+    });
+
+    stream.on('error', function() {
+      console.log('Error');
+    });
+  }
+
+  app.get('/', function(req, res) {
+    res.send({msg: 'Spark Streaming app API. Please go to /docs for documentation'})
+  });
+
+  app.get('/tweets', function(req, res) {
+    var sentiment = req.query.sentiment;
+
+    if (sentiment !== undefined) {
+      var getTweetsBySentiment = "SELECT * FROM twitter_streaming.tweets WHERE sentiment='" + sentiment + "';";
+      executeQuery(getTweetsBySentiment, res);
+    } else {
+      var getAllTweets = 'SELECT * FROM twitter_streaming.tweets;';
+      executeQuery(getAllTweets, res);
+    }
+  });
+
   var port = process.env.PORT || 8080;
-  app.listen(port);
+  server.listen(port);
 });

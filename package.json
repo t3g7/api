@@ -18,7 +18,9 @@
     "swagger-ui": "*",
     "body-parser": "*",
     "cassandra-driver": "*",
-    "stdio": "*"
+    "stdio": "*",
+    "http": "*",
+    "socket.io": "*"
   },
   "devDependencies": {
     "should": "^7.1.0",
