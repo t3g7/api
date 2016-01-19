@@ -1,15 +1,21 @@
-module.exports = function(app, client) {
+module.exports = function(app, client, io) {
+
   function executeQuery(request, res) {
-    client.execute(request, function(err, result) {
-      if (err) {
-        res.status(404).send({message: err});
-      } else {
-        if (result.rows.length > 0) {
-          res.send(result.rows);
-        } else {
-          console.log('No results');
-        }
-      }
+    var stream = client.stream(request);
+
+    var result = [];
+    stream.on('data', function(data) {
+      result.push(data);
+      console.log(data);
+    });
+
+    stream.on('end', function() {
+      res.json(result);
+      console.log('Stream ended');
+    });
+
+    stream.on('error', function() {
+      console.log('Error');
     });
   }
 
@@ -52,4 +58,9 @@ module.exports = function(app, client) {
     var getFreq = 'SELECT * FROM twitter_streaming.freq;';
     executeQuery(getFreq, res);
   });
-}
+
+  app.get('/trends', function(req, res) {
+    var getTrends = 'SELECT * FROM twitter_streaming.trends;';
+    executeQuery(getTrends, res);
+  });
+};
