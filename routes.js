@@ -1,6 +1,6 @@
 module.exports = function(app, client, io) {
-  function executeQuery(request, res) {
 
+  function executeQuery(request, res) {
     var stream = client.stream(request);
 
     var result = [];
