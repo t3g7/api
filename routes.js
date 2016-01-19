@@ -58,4 +58,9 @@ module.exports = function(app, client, io) {
     var getFreq = 'SELECT * FROM twitter_streaming.freq;';
     executeQuery(getFreq, res);
   });
+
+  app.get('/trends', function(req, res) {
+    var getTrends = 'SELECT * FROM twitter_streaming.trends;';
+    executeQuery(getTrends, res);
+  });
 };
