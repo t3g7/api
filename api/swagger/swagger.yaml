@@ -118,7 +118,24 @@ paths:
       summary: Find tweet count by minute
       responses:
         "200":
-          description: An array of tweets
+          description: An array of ints and timestamps
+          schema:
+            type: array
+            # a pointer to a definition
+            $ref: "#/definitions/Tweets"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            type: array
+            $ref: "#/definitions/ErrorResponse"
+  /trends:
+    get:
+      description: Returns trending hashtags by minute
+      summary: Find trending hashtags by minute
+      responses:
+        "200":
+          description: An array of hashtags and timestamps
           schema:
             type: array
             # a pointer to a definition

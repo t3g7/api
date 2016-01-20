@@ -2,13 +2,14 @@
 
 ## Requirements
 
-- Cassandra
+- Cassandra (v2.2.4)
+- Docker (v1.9.1)
 
 ## Use the API
 
 Run the API with `docker run -d -p 8080:8080 t3g7/api $CASSANDRA_IP`
 
-The API will be available at `http://$DOCKER_HOST_IP:8080` and its documentation at `http://$DOCKER_HOST_IP:8080/docs`
+The API will be available at `http://$API_SERVER_IP:8080` and its documentation at `http://$API_SERVER_IP:8080/docs`
 
 The documentation can be edited with Swagger: `swagger project edit`
 
@@ -22,4 +23,10 @@ The api will be available at `http://localhost:8080`
 
 ## Tests
 
-Make sure the docker image is running, set `DOCKER_HOST_IP` and `CASSANDRA_IP` as environment variables then run `npm test`
+The API is tested on Travis CI (not with Docker, see below for using it).
+
+#### With Docker
+
+Tests using Docker must be run locally (see [Issue#4](https://github.com/t3g7/api/issues/4)).
+
+Make sure you have Docker `v1.9.1` or greater and execute `test.sh` in `test`.
