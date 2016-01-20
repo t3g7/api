@@ -8,6 +8,7 @@ var stdio = require('stdio');
 var app = require('express')();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
+var sleep = require('sleep');
 
 module.exports = app; // for testing
 app.use(bodyParser.json());
@@ -52,24 +53,38 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
       result.push(data);
     });
     stream.on('end', function() {
-      io.of(namespace).emit(namespace, result);
-      console.log('Stream ' + namespace + ' ended');
+      console.log("Emitting " + result.length + " tweets");
+      io.emit(namespace, result);
+      console.log('Stream ' + namespace + ' ended at ' + new Date());
     });
   }
 
-  io.of('/tweets').on('connection', function() {
+  io.on('connection', function(socket) {
+    console.log(new Date());
+
     var tweets = 'SELECT * FROM twitter_streaming.tweets;';
     streamResult(tweets, 'tweets');
-  });
 
-  io.of('/freq').on('connection', function() {
     var freq = 'SELECT * FROM twitter_streaming.freq;';
     streamResult(freq, 'freq');
-  });
 
-  io.of('/trends').on('connection', function() {
     var trends = 'SELECT * FROM twitter_streaming.trends;';
     streamResult(trends, 'trends');
+
+    socket.on('tweets-next', function() {
+      sleep.sleep(5);
+      streamResult(tweets, 'tweets');
+    });
+
+    socket.on('freq-next', function() {
+      sleep.sleep(2);
+      streamResult(freq, 'freq');
+    });
+
+    socket.on('trends-next', function() {
+      sleep.sleep(2);
+      streamResult(trends, 'trends');
+    });
   });
 
   var port = process.env.PORT || 8080;
