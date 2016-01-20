@@ -45,62 +45,31 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     next();
   });
 
-  function executeQuery(request, res) {
-    var stream = client.stream(request);
-
+  function streamResult(query, namespace) {
+    var stream = client.stream(query);
     var result = [];
     stream.on('data', function(data) {
       result.push(data);
     });
-
     stream.on('end', function() {
-      res.json(result);
-      io.emit('tweets', result);
-      console.log('Stream ended');
-    });
-
-    stream.on('error', function() {
-      console.log('Error');
+      io.of(namespace).emit(namespace, result);
+      console.log('Stream ' + namespace + ' ended');
     });
   }
 
   io.of('/tweets').on('connection', function() {
     var tweets = 'SELECT * FROM twitter_streaming.tweets;';
-    var streamTweets = client.stream(tweets);
-    var resultTweets = [];
-    streamTweets.on('data', function(data) {
-      resultTweets.push(data);
-    });
-    streamTweets.on('end', function() {
-      io.of('tweets').emit('tweets', resultTweets);
-      console.log('Stream tweets ended');
-    });
+    streamResult(tweets, 'tweets');
   });
 
   io.of('/freq').on('connection', function() {
     var freq = 'SELECT * FROM twitter_streaming.freq;';
-    var streamFreq = client.stream(freq);
-    var resultFreq = [];
-    streamFreq.on('data', function(data) {
-      resultFreq.push(data);
-    });
-    streamFreq.on('end', function() {
-      io.of('freq').emit('freq', resultFreq);
-      console.log('Stream freq ended');
-    });
+    streamResult(freq, 'freq');
   });
 
   io.of('/trends').on('connection', function() {
     var trends = 'SELECT * FROM twitter_streaming.trends;';
-    var streamTrends = client.stream(trends);
-    var resultTrends = [];
-    streamTrends.on('data', function(data) {
-      resultTrends.push(data);
-    });
-    streamTrends.on('end', function() {
-      io.of('trends').emit('trends', resultTrends);
-      console.log('Stream trends ended');
-    });
+    streamResult(trends, 'trends');
   });
 
   var port = process.env.PORT || 8080;

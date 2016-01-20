@@ -1,4 +1,4 @@
-module.exports = function(app, client, io) {
+module.exports = function(app, client) {
 
   function executeQuery(request, res) {
     var stream = client.stream(request);
