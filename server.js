@@ -53,15 +53,12 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
       result.push(data);
     });
     stream.on('end', function() {
-      console.log("Emitting " + result.length + " tweets");
       io.emit(namespace, result);
       console.log('Stream ' + namespace + ' ended at ' + new Date());
     });
   }
 
   io.on('connection', function(socket) {
-    console.log(new Date());
-
     var tweets = 'SELECT * FROM twitter_streaming.tweets;';
     streamResult(tweets, 'tweets');
 
