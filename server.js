@@ -18,7 +18,7 @@ var config = {
 };
 
 var ops = stdio.getopt({
-    'cassandraip': {key: 'c', args: 1, description: 'Cassandra contact point IP'}
+    'cassandraip': {key: 'c', description: 'Cassandra contact point IP', multiple: true}
 });
 var cassandraContacPoint = ops.cassandraip || process.env.CASSANDRA_IP;
 
@@ -27,7 +27,7 @@ if (!ops.cassandraip && !process.env.CASSANDRA_IP) {
   process.exit();
 }
 
-var client = new cassandra.Client({ contactPoints : [cassandraContacPoint]});
+var client = new cassandra.Client({ contactPoints : cassandraContacPoint});
 require('./routes')(app, client, io);
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {

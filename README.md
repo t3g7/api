@@ -7,7 +7,7 @@
 
 ## Use the API
 
-Run the API with `docker run -d -p 8080:8080 t3g7/api $CASSANDRA_IP`
+Run the API with `docker run -d -p 8080:8080 t3g7/api $CASSANDRA_IP [-c $OTHER_CASSANDRA_IP]`
 
 The API will be available at `http://$API_SERVER_IP:8080` and its documentation at `http://$API_SERVER_IP:8080/docs`
 
@@ -17,7 +17,7 @@ The documentation can be edited with Swagger: `swagger project edit`
 
 Install dependencies with `npm install`
 
-Run the API with `node server.js -c/--cassandraip $CASSANDRA_CLUSTER_IP`
+Run the API with `node server.js -c/--cassandraip $CASSANDRA_NODE_IP [-c $OTHER_CASSANDRA_NODE_IP]`
 
 The api will be available at `http://localhost:8080`
 
